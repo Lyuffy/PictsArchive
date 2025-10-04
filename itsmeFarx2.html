@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <title>Galeri</title>
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    html, body {
+  font-family: sans-serif;
+  background: url('img/pom-2pc.jpeg') no-repeat center center fixed;
+  background-size: cover;
+  color: #222;
+  height: 100%;
+  overflow-y: auto;
+    }
+    .nav-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 12px 24px;
+      font-size: 16px;
+      color: rgb(1, 1, 1);
+      background-color: #ffffffda;
+      border: 2px solid black;
+      box-shadow: 0 0 8px #fbfdfb;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .video-list-wrapper {
+      padding: 40px 40px 60px;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+    .video-list {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 30px;
+    }
+    .video-item {
+      background-color: #ffffff92;
+      border-radius: 12px;
+      box-shadow: 0 0 10px hsl(181, 100%, 50%);
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+    .video-item:hover {
+      transform: scale(1.05);
+    }
+    .video-item img {
+  width: 100%;
+  aspect-ratio: 16 / 18;
+  object-fit: cover;
+  display: block;
+  border: 4px solid #00fff7;
+  box-shadow: 0 0 16px #00fff7, 0 0 32px #fff;
+  border-radius: 12px;
+    }
+    .video-info {
+      padding: 10px;
+      font-size: 14px;
+      text-align: center;
+    }
+    .video-info strong {
+  display: transparent;
+  color: #000000;
+  margin-bottom: 2px;
+  font-size: 15px;
+  font-family: 'Share Tech Mono', 'Orbitron', 'monospace';
+  font-weight: 700;
+  background: none;
+  border-radius: 6px;
+  padding: 2px 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px #01f2ff, 0 0 4px #fff;
+    }
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 99;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      justify-content: center;
+      align-items: center;
+    }
+    .lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 255, 247, 0.985);
+      animation: zoomIn 0.3s ease;
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    @media (max-width: 1200px) {
+      .video-list { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 800px) {
+      .video-list { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <audio id="clickSound" src="sound click/zapsplat_multimedia_plastic_button_press_light_fast_113387.mp3"></audio>
+  <button class="nav-button" onclick="playClick(); window.location='index.html'">⬅ Keluar</button>
+
+  <div class="gallery-controls">
+    <form id="uploadForm" onsubmit="return false;" style="display:flex; flex-direction:column; align-items:center; justify-content:center; background:rgba(255,255,255,0.95); box-shadow:0 0 16px #00fff7,0 0 32px #fff; border-radius:18px; padding:24px 32px; margin:32px auto 16px auto; max-width:480px;">
+  <input type="file" id="imageInput" accept="image/*" style="margin-bottom:12px; background:#1a0033; color:#fff; border-radius:8px; border:2px solid #a800ff; box-shadow:0 0 8px #00fff7;">
+  <input type="text" id="imageName" placeholder="Nama gambar" style="margin-bottom:12px; background:#1a0033; color:#fff; border-radius:8px; border:2px solid #a800ff; box-shadow:0 0 8px #00fff7; padding:8px; width:80%;">
+  <button type="button" id="uploadBtn" class="btn" style="background:linear-gradient(90deg,#030303 60%,#00fff7 100%); color:#fff; border:2px solid #00fff7; box-shadow:0 0 12px #00fff7,0 0 8px #a800ff; font-weight:bold;">Upload Gambar</button>
+  <input type="text" id="searchInput" placeholder="Cari gambar..." style="margin-top:18px; background:#1a0033; color:#fff; border-radius:8px; border:2px solid #a800ff; box-shadow:0 0 8px #00fff7; padding:8px; width:80%;">
+    </form>
+  </div>
+
+  <div class="video-list-wrapper">
+    <div class="video-list">
+  <div class="lightbox" id="lightbox">
+    <img src="" id="lightbox-img" alt="Preview">
+  </div>
+
+  <script>
+
+  // Play click sound
+    function playClick() {
+      const audio = document.getElementById('clickSound');
+      audio.currentTime = 0;
+      audio.play();
+    }
+
+    // Add click sound to all buttons
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', playClick);
+    });
+
+  // Add click sound to gallery images
+    function addClickSoundToImages() {
+      document.querySelectorAll('.video-item img').forEach(img => {
+        img.addEventListener('click', playClick);
+      });
+    }
+    addClickSoundToImages();
+
+  // Ensure new images have click sound
+    function addImageToGallery(src, name) {
+  const div = document.createElement('div');
+  div.className = 'video-item';
+  div.innerHTML = `<img src="${src}">`;
+  videoList.appendChild(div);
+  // Enable lightbox for new image
+      div.querySelector('img').addEventListener('click', () => {
+        lightbox.style.display = 'flex';
+        lightboxImg.src = src;
+        lightboxImg.alt = name;
+      });
+  // Add click sound to new image
+      div.querySelector('img').addEventListener('click', playClick);
+      gallery.push({src, name, element: div});
+    }
+
+  // Gallery data
+    const gallery = [];
+  // Gallery element
+    const videoList = document.querySelector('.video-list');
+
+  // Upload image
+    document.getElementById('uploadBtn').onclick = function() {
+      const fileInput = document.getElementById('imageInput');
+      const nameInput = document.getElementById('imageName');
+      const file = fileInput.files[0];
+      const name = nameInput.value.trim() || 'Tanpa Nama';
+      if (!file) {
+        alert('Pilih gambar terlebih dahulu!');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        addImageToGallery(e.target.result, name);
+        fileInput.value = '';
+        nameInput.value = '';
+      };
+      reader.readAsDataURL(file);
+    };
+
+  // Add image to gallery
+    function addImageToGallery(src, name) {
+      const div = document.createElement('div');
+      div.className = 'video-item';
+      div.innerHTML = `<img src="${src}"><div class="video-info"><strong>${name}</strong></div>`;
+      videoList.appendChild(div);
+      // Aktifkan lightbox untuk gambar baru
+      div.querySelector('img').addEventListener('click', () => {
+        lightbox.style.display = 'flex';
+        lightboxImg.src = src;
+        lightboxImg.alt = name;
+      });
+      gallery.push({src, name, element: div});
+    }
+
+  // Image search
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const keyword = this.value.toLowerCase();
+  // Search dynamic images
+      gallery.forEach(item => {
+        if (item.name.toLowerCase().includes(keyword)) {
+          item.element.style.display = '';
+        } else {
+          item.element.style.display = 'none';
+        }
+      });
+  // Search static images
+      document.querySelectorAll('.video-item').forEach(div => {
+        const info = div.querySelector('.video-info strong');
+        if (info && info.textContent.toLowerCase().includes(keyword)) {
+          div.style.display = '';
+        } else if (info) {
+          div.style.display = 'none';
+        }
+      });
+    });
+
+    const lightbox = document.getElementById("lightbox");
+        const lightboxImg = document.getElementById("lightbox-img");
+
+  // Enable lightbox on image click
+    document.querySelectorAll(".video-item img").forEach((img) => {
+      img.addEventListener("click", () => {
+        lightbox.style.display = "flex";
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt || "Preview Gambar";
+      });
+    });
+
+  // Close lightbox on outside click
+    lightbox.addEventListener("click", (e) => {
+      if (e.target !== lightboxImg) {
+        lightbox.style.display = "none";
+        lightboxImg.src = "";
+      }
+    });
+
+  // Close lightbox with ESC
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        lightbox.style.display = "none";
+        lightboxImg.src = "";
+      }
+    });
+    </script>
+    

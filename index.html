@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <title>Fayidd webs</title>
+  <style>
+    body, html { margin: 0; padding: 0; height: 100%; font-family: Arial; overflow: hidden; }
+    .container { position: relative; height: 100vh; text-align: center; color: rgb(255, 255, 255); }
+    .background-video {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1;
+    }
+    .overlay {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    }
+    .btn-nav {
+      margin: 10px;
+      padding: 12px 24px;
+      font-size: 16px;
+      color: rgb(3, 3, 3);
+      background-color: #fafcfaf6;
+      border: 2px solid black;
+      box-shadow: 0 0 8px #fdfffd;
+      cursor: pointer;
+    }
+    .glitch-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 320px;
+      background: linear-gradient(135deg, #fff 60%, #00fff7 100%);
+  color: #111;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      padding: 32px 40px;
+      border-radius: 18px;
+      box-shadow: 0 0 32px #00fff7, 0 0 16px #fff;
+      z-index: 9999;
+      animation: glitch 1.2s infinite linear alternate;
+      letter-spacing: 2px;
+      display: none;
+    }
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 #fff, -2px 0 #00fff7; }
+      20% { text-shadow: -2px 0 #fff, 2px 0 #00fff7; }
+      40% { text-shadow: 2px 2px #00fff7, -2px -2px #fff; }
+      60% { text-shadow: -2px 2px #fff, 2px -2px #00fff7; }
+      80% { text-shadow: 0 0 #fff, 0 0 #00fff7; }
+      100% { text-shadow: 2px 0 #fff, -2px 0 #00fff7; }
+    }
+  </style>
+</head>
+<body>
+  <audio id="clickSound" src="sound click/zapsplat_multimedia_plastic_button_press_light_fast_113387.mp3"></audio>
+  <video autoplay muted loop class="background-video">
+    <source src="media\SSYouTube.online_Loop Background  Live Wallpaper  Chilling Cat  No Sound_1080p.mp4" type="video/mp4">
+  </video>
+  <div class="container">
+    <div class="overlay">
+  <h1>Selamat Datang!</h1>
+  <button class="btn-nav" style="margin-top:32px;" onclick="window.location='itsmeFarx2.html'">➤ Masuk ke Galeri</button>
+  <div id="typewriter" style="margin-top:24px; font-size:1.1rem; color:#fbfdfd; font-family:'Share Tech Mono', 'monospace'; letter-spacing:1px; text-shadow:0 0 8px #00fff7,0 0 4px #fff;"></div>
+    </div>
+  </div>
+  <script>
+    // Typewriter effect for warning text
+    const typeText = "Mohon jangan masukkan konten ilegal atau berbahaya di galeri. Terima kasih!";
+    let i = 0;
+    function typeWriter() {
+      if (i < typeText.length) {
+        document.getElementById("typewriter").innerHTML += typeText.charAt(i);
+        i++;
+        setTimeout(typeWriter, 55);
+      }
+    }
+    window.onload = typeWriter;
+    // Play click sound
+    function playClick() {
+      const audio = document.getElementById('clickSound');
+      audio.currentTime = 0;
+      audio.play();
+    }
+
+    // Add click sound to all buttons
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', playClick);
+    });
+    function showGlitchPopup() {
+      var popup = document.getElementById('glitch-popup');
+      popup.style.display = 'block';
+      setTimeout(function() {
+        popup.style.display = 'none';
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
